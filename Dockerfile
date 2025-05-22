@@ -13,10 +13,10 @@ ENV NODE_ENV production
 COPY --from=builder /app/package.json /app/package-lock.json ./
 RUN npm ci --omit=dev --ignore-scripts
 COPY --from=builder /app/build ./build
-COPY express-server.js ./express-server.js
-RUN chmod +x ./express-server.js
+COPY express-server.cjs ./express-server.cjs
+RUN chmod +x ./express-server.cjs
 
 EXPOSE 8080
 
 # Run the Express server with Basic Auth
-CMD ["node", "express-server.js"]
+CMD ["node", "express-server.cjs"]
