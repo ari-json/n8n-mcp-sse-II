@@ -204,3 +204,43 @@ Based on this repo: https://github.com/leonardsellem/n8n-mcp-server/
 ## License
 
 MIT
+
+## Deploying to Railway
+
+You can easily deploy this MCP server to Railway with the following steps:
+
+1. Fork this repository on GitHub
+2. Create a new project on Railway using your fork
+3. Configure the following environment variables:
+
+| Environment Variable | Description |
+|----------------------|-------------|
+| `N8N_API_URL` | Your n8n instance API URL (must include /api/v1), e.g., `https://your-subdomain.n8n.cloud/api/v1` |
+| `N8N_API_KEY` | API key generated from your n8n instance (Settings → API → Create Key) |
+| `N8N_WEBHOOK_USERNAME` | Username for securing webhook endpoints |
+| `N8N_WEBHOOK_PASSWORD` | Password for securing webhook endpoints |
+| `DEBUG` | Set to `true` for verbose logging, `false` for production |
+| `PORT` | Port to run the server on (Railway usually sets this automatically) |
+
+4. Deploy your application. Railway will automatically build and run the MCP server.
+5. Once deployed, you'll have two key endpoints:
+   - SSE Stream: `https://your-app.up.railway.app/sse`
+   - Message Endpoint: `https://your-app.up.railway.app/message`
+
+6. Configure your AI agent to connect to these endpoints.
+
+### Accessing Node Types
+
+With this deployment, you can use the `list_node_types` tool to fetch all available node types from your n8n instance. This helps you build workflows with the correct internal node names, even when they differ from their display names in the n8n UI.
+
+Example response:
+```json
+{
+  "name": "n8n-nodes-base.HttpRequest",
+  "displayName": "HTTP Request",
+  "icon": "file:http.svg",
+  "group": ["output"],
+  "version": 1,
+  ...
+}
+```

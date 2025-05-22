@@ -16,6 +16,7 @@ import {
 import { getEnvConfig } from './environment.js';
 import { setupWorkflowTools } from '../tools/workflow/index.js';
 import { setupExecutionTools } from '../tools/execution/index.js';
+import { setupNodeTypesTools } from '../tools/node-types/index.js';
 import { setupResourceHandlers } from '../resources/index.js';
 import { createApiService } from '../api/n8n-client.js';
 
@@ -76,9 +77,10 @@ function setupToolListRequestHandler(server: Server): void {
     // Combine tools from workflow and execution modules
     const workflowTools = await setupWorkflowTools();
     const executionTools = await setupExecutionTools();
+    const nodeTypesTools = await setupNodeTypesTools();
 
     return {
-      tools: [...workflowTools, ...executionTools],
+      tools: [...workflowTools, ...executionTools, ...nodeTypesTools],
     };
   });
 }
@@ -114,6 +116,10 @@ function setupToolCallRequestHandler(server: Server): void {
         RunWebhookHandler
       } = await import('../tools/execution/index.js');
       
+      const {
+        ListNodeTypesHandler
+      } = await import('../tools/node-types/index.js');
+      
       // Route the tool call to the appropriate handler
       if (toolName === 'list_workflows') {
         const handler = new ListWorkflowsHandler();
@@ -147,6 +153,9 @@ function setupToolCallRequestHandler(server: Server): void {
         result = await handler.execute(args);
       } else if (toolName === 'run_webhook') {
         const handler = new RunWebhookHandler();
+        result = await handler.execute(args);
+      } else if (toolName === 'list_node_types') {
+        const handler = new ListNodeTypesHandler();
         result = await handler.execute(args);
       } else {
         throw new Error(`Unknown tool: ${toolName}`);
