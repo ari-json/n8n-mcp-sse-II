@@ -31,7 +31,9 @@
     "axios": "^1.6.2",
     "dotenv": "^16.3.1",
     "express": "^5.1.0",
-    "express-basic-auth": "^1.2.1"
+    "express-basic-auth": "^1.2.1",
+    "http-proxy": "^1.18.1",
+    "http-proxy-middleware": "^3.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.26.10",
