@@ -6,10 +6,10 @@
  * for the /sse and /message endpoints, then runs Supergateway.
  */
 
-const express = require('express');
-const basicAuth = require('express-basic-auth');
-const { spawn } = require('child_process');
-const { createServer } = require('http');
+import express from 'express';
+import basicAuth from 'express-basic-auth';
+import { spawn } from 'child_process';
+import { createServer } from 'http';
 
 // Create Express app
 const app = express();
@@ -59,7 +59,7 @@ server.listen(port, () => {
     '-y',
     'supergateway',
     '--stdio', 'node build/index.js',
-    '--port', port,
+    '--port', port.toString(),
     '--healthEndpoint', '/healthz',
     '--cors'
   ], {
