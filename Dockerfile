@@ -13,10 +13,10 @@ ENV NODE_ENV production
 COPY --from=builder /app/package.json /app/package-lock.json ./
 RUN npm ci --omit=dev --ignore-scripts
 COPY --from=builder /app/build ./build
-COPY start.sh ./start.sh
-RUN chmod +x ./start.sh
+COPY express-server.js ./express-server.js
+RUN chmod +x ./express-server.js
 
-EXPOSE 8000
+EXPOSE 8080
 
-# Run the start script which uses Supergateway with Basic Auth
-CMD ["./start.sh"]
+# Run the Express server with Basic Auth
+CMD ["node", "express-server.js"]
