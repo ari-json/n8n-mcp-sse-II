@@ -1,0 +1,72 @@
+[
+  {
+    "name": "n8n-nodes-base.HttpRequest",
+    "displayName": "HTTP Request",
+    "group": ["output"],
+    "description": "Makes an HTTP request and returns the response data",
+    "version": 1
+  },
+  {
+    "name": "n8n-nodes-base.Set",
+    "displayName": "Set",
+    "group": ["transform"],
+    "description": "Sets values on items and optionally removes other values",
+    "version": 1
+  },
+  {
+    "name": "n8n-nodes-base.Function",
+    "displayName": "Function",
+    "group": ["transform"],
+    "description": "Runs JavaScript code that can manipulate the data in any way",
+    "version": 1
+  },
+  {
+    "name": "n8n-nodes-base.Gmail",
+    "displayName": "Gmail",
+    "group": ["communication"],
+    "description": "Sends emails via Gmail",
+    "version": 1
+  },
+  {
+    "name": "n8n-nodes-base.Slack",
+    "displayName": "Slack",
+    "group": ["communication"],
+    "description": "Sends messages to Slack",
+    "version": 1
+  },
+  {
+    "name": "n8n-nodes-base.Webhook",
+    "displayName": "Webhook",
+    "group": ["trigger"],
+    "description": "Starts the workflow when a webhook is called",
+    "version": 1
+  },
+  {
+    "name": "n8n-nodes-base.Schedule",
+    "displayName": "Schedule",
+    "group": ["trigger"],
+    "description": "Starts the workflow at a specific time",
+    "version": 1
+  },
+  {
+    "name": "n8n-nodes-base.OpenAI",
+    "displayName": "OpenAI",
+    "group": ["ai"],
+    "description": "Use OpenAI's API to generate text, embeddings, etc.",
+    "version": 1
+  },
+  {
+    "name": "n8n-nodes-base.ChatGPT",
+    "displayName": "ChatGPT",
+    "group": ["ai"],
+    "description": "Interact with OpenAI's ChatGPT",
+    "version": 1
+  },
+  {
+    "name": "n8n-nodes-base.LangChainAgentExecutor",
+    "displayName": "LangChain Agent Executor",
+    "group": ["ai"],
+    "description": "Execute a LangChain agent with tools",
+    "version": 1
+  }
+] 

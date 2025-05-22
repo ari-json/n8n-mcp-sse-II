@@ -244,3 +244,80 @@ Example response:
   ...
 }
 ```
+
+## Local Development Mode
+
+For easier development and testing, you can run the MCP server locally without deploying to Railway. This is useful when working with Claude Desktop.
+
+### Setup for Local Development
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-username/n8n-mcp-sse-II.git
+   cd n8n-mcp-sse-II
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   # or
+   pnpm install
+   ```
+
+3. **Create an .env file**
+   Copy the example file and fill in your n8n Cloud API details:
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Edit the .env file with your actual credentials:
+   ```
+   N8N_API_URL=https://your-subdomain.n8n.cloud/api/v1
+   N8N_API_KEY=your_personal_access_token
+   ```
+
+4. **Prepare node types (optional)**
+   If you want to use a local node types list:
+   ```bash
+   cp nodes-list.json.example nodes-list.json
+   ```
+   
+   You can customize this file with your actual n8n node types.
+
+5. **Start the local server**
+   ```bash
+   npm run local
+   # or for development with auto-restart:
+   npm run local:dev
+   ```
+   
+   The server will start on http://localhost:3000 by default.
+
+### Configuring Claude Desktop
+
+In your Claude Desktop settings, configure the MCP server:
+
+1. Go to Settings → Integrations → Add Custom Integration
+
+2. Enter `http://localhost:3000` as the base URL
+
+3. Test the connection and enable the tools you want to use
+
+4. Start chatting with Claude and use your n8n tools!
+
+### API Endpoints
+
+- **Health Check:** `GET http://localhost:3000/healthz`
+- **Tool Manifest:** `GET http://localhost:3000/.well-known/ai-plugin.json`
+- **Tool Execution:** `POST http://localhost:3000/mcp/call`
+
+### Example Tool Call
+
+```json
+{
+  "tool": "list_workflows",
+  "parameters": {}
+}
+```
+
+This simplified local version bypasses all the complexity of Supergateway and Basic Auth, making it perfect for local development and testing.
