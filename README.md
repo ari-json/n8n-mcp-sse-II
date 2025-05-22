@@ -1,36 +1,118 @@
 # One Click Deploy n8n MCP Server
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?repo=ari-json/n8n-mcp-sse-II)
 
 A Model Context Protocol (MCP) server that allows AI agents to interact with n8n workflows through natural language.
 
-## Deployment
+## Deployment Options
 
-### One-Click Deploy to Railway
+You can deploy this server in two ways:
 
-[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/template/se2WHK?referralCode=SQ5fZY)
+1. **Railway Deployment** - For production, always-on access
+2. **Local Development** - For quick testing and development
 
-**Note:** After clicking the button, Railway will prompt you to configure the necessary environment variables (see below).
+## A. Railway Deployment (Production)
 
-### Docker Deployment (Manual / Local Testing)
+### Quick Deploy
 
-The `Dockerfile` in this repository is configured to build the `n8n-mcp-server` and run it with Supergateway.
+1. Click the "Deploy on Railway" button above
+2. Configure the following environment variables:
+   ```
+   N8N_API_URL=https://<your-n8n-subdomain>.n8n.cloud/api/v1
+   N8N_API_KEY=<your-n8n-api-key>  # mark as secret
+   N8N_WEBHOOK_USERNAME=anyname
+   N8N_WEBHOOK_PASSWORD=somepassword
+   DEBUG=false
+   PORT=8080
+   ```
+3. In Railway → Deploy → Healthcheck Path, set `/healthz`
+4. Verify your deployment is working:
+   ```bash
+   # Check health endpoint
+   curl -i https://<your-app>.up.railway.app/healthz
+   
+   # Test SSE connection
+   curl -N -H "Accept: text/event-stream" https://<your-app>.up.railway.app/sse
+   
+   # Test node types API
+   curl -i -X POST https://<your-app>.up.railway.app/message \
+     -H "Content-Type: application/json" \
+     -H "X-N8N-API-KEY: <your-n8n-api-key>" \
+     -d '{"name":"list_node_types","arguments":{}}'
+   ```
 
-1.  **Build the Docker Image:**
-    ```bash
-    docker build -t n8n-mcp-server-supergateway .
-    ```
+### Connecting Claude Desktop to Railway
 
-2.  **Run the Docker Container:**
-    ```bash
-    docker run --rm -it -p 8080:8080 \
-      -e PORT=8080 \
-      -e N8N_API_URL="YOUR_N8N_API_URL" \
-      -e N8N_API_KEY="YOUR_N8N_API_KEY" \
-      -e N8N_WEBHOOK_USERNAME="your_webhook_user" \
-      -e N8N_WEBHOOK_PASSWORD="your_webhook_password" \
-      -e DEBUG=true \
-      n8n-mcp-server-supergateway
-    ```
-    Replace placeholder values with your actual n8n credentials. The server will be accessible via SSE on `http://localhost:8080`. Supergateway provides default paths `/sse` for the event stream and `/message` for posting messages.
+Claude Desktop requires a local bridge to connect to your Railway deployment:
+
+1. **Install Supergateway**:
+   ```bash
+   npm install -g @modelcontextprotocol/sdk
+   ```
+
+2. **Launch Supergateway**:
+   ```bash
+   npx supergateway \
+     --sse     https://<your-app>.up.railway.app/sse \
+     --message https://<your-app>.up.railway.app/message \
+     --port    5000 \
+     --timeout 30000
+   ```
+
+3. **Configure Claude Desktop**:
+   - Open Claude Desktop → File → Settings → Developer → Edit config
+   - Add this JSON configuration:
+   ```json
+   {
+     "mcpServers": [
+       {
+         "name": "n8n-via-supergateway",
+         "command": "npx",
+         "args": [
+           "supergateway",
+           "--sse",     "http://127.0.0.1:5000/sse",
+           "--message", "http://127.0.0.1:5000/message",
+           "--timeout", "30000"
+         ]
+       }
+     ]
+   }
+   ```
+   - Save and restart Claude Desktop
+   - Enable the tools in Settings → Developer → n8n-via-supergateway
+
+## B. Local Development (Quick Testing)
+
+For easier development and testing, you can run the MCP server locally:
+
+1. **Clone and install**:
+   ```bash
+   git clone https://github.com/your-username/n8n-mcp-sse-II.git
+   cd n8n-mcp-sse-II
+   npm install
+   ```
+
+2. **Configure your .env file**:
+   ```bash
+   cp .env.example .env
+   # Edit .env with your n8n credentials
+   ```
+
+3. **Start the local server**:
+   ```bash
+   npm run local
+   # or for development with auto-restart:
+   npm run local:dev
+   ```
+
+4. **Configure Claude Desktop**:
+   - Go to Settings → Integrations → Add Custom Integration
+   - Enter `http://localhost:3000` as the base URL
+   - Test the connection and enable the tools you want to use
+
+## Why Use Both Approaches?
+
+- **Railway**: Production-ready, always-on service accessible from anywhere
+- **Local**: Fast development, works offline, direct connection to Claude Desktop
 
 ## Configuration
 
